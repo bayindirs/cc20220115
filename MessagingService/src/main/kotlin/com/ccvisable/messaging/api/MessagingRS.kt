@@ -4,18 +4,20 @@ import com.ccvisable.messaging.api.model.Inbox
 import com.ccvisable.messaging.api.model.NewPost
 import com.ccvisable.messaging.api.model.Outbox
 import com.ccvisable.messaging.api.model.PostInfo
+import com.ccvisable.messaging.kafka.KafkaSender
 import com.ccvisable.messaging.service.MessagingService
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/messaging")
 class MessagingRS(
-    private val messagingService: MessagingService
+    private val messagingService: MessagingService,
+    private val kafkaSender: KafkaSender
 ) {
 
     @PostMapping("/send")
     fun send(@RequestBody newPost: NewPost) {
-        messagingService.saveMessage(newPost.from, newPost.to, newPost.text)
+        kafkaSender.sendNewMessage(newPost)
     }
 
     @GetMapping("{accountId}/inbox")
