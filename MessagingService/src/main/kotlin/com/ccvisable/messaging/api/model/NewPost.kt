@@ -1,16 +1,14 @@
 package com.ccvisable.messaging.api.model
 
-data class PostInfo(
-
+data class NewPost(
     /**
-     * username of the sender
+     * account-id of the sender
      */
     var from: String = "",
 
     /**
-     * username of the receiver
+     * account-id of the receiver
      */
     var to: String = "",
-
     var text: String = ""
 )

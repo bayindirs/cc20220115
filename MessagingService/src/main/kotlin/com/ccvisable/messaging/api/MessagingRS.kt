@@ -1,27 +1,36 @@
 package com.ccvisable.messaging.api
 
 import com.ccvisable.messaging.api.model.Inbox
+import com.ccvisable.messaging.api.model.NewPost
 import com.ccvisable.messaging.api.model.Outbox
 import com.ccvisable.messaging.api.model.PostInfo
+import com.ccvisable.messaging.service.MessagingService
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 @RestController
 @RequestMapping("/messaging")
-class MessagingRS {
+class MessagingRS(
+    private val messagingService: MessagingService
+) {
 
     @PostMapping("/send")
-    fun send(@RequestBody postInfo: PostInfo) {
-
+    fun send(@RequestBody newPost: NewPost) {
+        messagingService.saveMessage(newPost.from, newPost.to, newPost.text)
     }
 
-    @GetMapping("{userId}/inbox")
-    fun inbox(@PathVariable userId: String, @RequestParam from: String?): Inbox {
-        return Inbox(Collections.emptyList())
+    @GetMapping("{accountId}/inbox")
+    fun inbox(@PathVariable accountId: String, @RequestParam from: String?): Inbox {
+        val posts: List<PostInfo>
+        if (from.isNullOrBlank()) {
+            posts = messagingService.getAllIncoming(accountId)
+        } else {
+            posts = messagingService.getIncomingFrom(accountId, from)
+        }
+        return Inbox(posts)
     }
 
-    @GetMapping("{userId}/outbox")
-    fun outbox(@PathVariable userId: String): Outbox {
-        return Outbox(Collections.emptyList())
+    @GetMapping("{accountId}/outbox")
+    fun outbox(@PathVariable accountId: String): Outbox {
+        return Outbox(messagingService.getAllOutgoing(accountId))
     }
 }

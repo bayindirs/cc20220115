@@ -29,7 +29,7 @@ class FakeAccountRepository : AccountRepository {
     }
 
     override fun findById(id: String): Optional<DbAccount> {
-        TODO("Not yet implemented")
+        return Optional.ofNullable(accounts.firstOrNull { it.id.contentEquals(id) })
     }
 
     override fun existsById(id: String): Boolean {
@@ -89,7 +89,7 @@ class FakeAccountRepository : AccountRepository {
     }
 
     override fun deleteAll() {
-        TODO("Not yet implemented")
+        accounts.clear()
     }
 
     override fun <S : DbAccount?> findOne(example: Example<S>): Optional<S> {
