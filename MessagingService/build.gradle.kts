@@ -28,6 +28,10 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+	archiveFileName.set("messaging-service.jar")
+}
+
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")

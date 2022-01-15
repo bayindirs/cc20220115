@@ -1,1 +1,1 @@
-rootProject.name = "messaging"
+rootProject.name = "messaging-service"
